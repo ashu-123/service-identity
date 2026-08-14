@@ -2,6 +2,8 @@ package com.common.identity.auth.service;
 
 
 import com.common.identity.auth.model.dto.*;
+import com.common.identity.exception.UserAlreadyExistException;
+import com.common.identity.exception.UserNotFoundException;
 import com.common.identity.jwt.JwtService;
 import com.common.identity.role.model.entity.Role;
 import com.common.identity.role.repository.RoleRepository;
@@ -37,7 +39,7 @@ public class AuthService {
         String normalizedEmail = normalizeEmail(request.getEmail());
 
         if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
-            throw new IllegalArgumentException("Email is already registered");
+            throw new UserAlreadyExistException("An account with this email already exists.");
         }
 
         Role userRole = roleRepository.findByName(DEFAULT_ROLE)
@@ -95,7 +97,7 @@ public class AuthService {
     public MeResponseDto getCurrentUser(Long userId) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User does not exist."));
 
         return MeResponseDto.builder()
                 .id(user.getId())

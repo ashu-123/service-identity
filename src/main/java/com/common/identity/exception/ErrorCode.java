@@ -1,0 +1,21 @@
+package com.common.identity.exception;
+
+public enum ErrorCode {
+
+    INVALID_REQUEST,
+    VALIDATION_FAILED,
+
+    USER_ALREADY_EXISTS,
+    USER_NOT_FOUND,
+
+    INVALID_CREDENTIALS,
+
+    UNAUTHORIZED,
+    INVALID_TOKEN,
+    FORBIDDEN,
+
+    INVALID_API_VERSION,
+    UNSUPPORTED_API_VERSION,
+
+    INTERNAL_SERVER_ERROR
+}
