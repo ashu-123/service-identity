@@ -1,6 +1,9 @@
 package com.common.identity.config;
 
+import com.common.identity.exception.security.JwtAccessDeniedHandler;
+import com.common.identity.exception.security.JwtAuthenticationEntryPoint;
 import com.common.identity.jwt.JwtProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +19,12 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableConfigurationProperties(JwtProperties.class)
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+
+    private final JwtAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,16 +45,20 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationProvider authenticationProvider) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
+                                                   AuthenticationProvider authenticationProvider,
+                                                   JwtAuthenticationEntryPoint authenticationEntryPoint,
+                                                   JwtAccessDeniedHandler accessDeniedHandler) throws Exception {
         http.csrf(csrf -> csrf.disable())
-            .authenticationProvider(authenticationProvider)
-            .authorizeHttpRequests(auth -> auth.requestMatchers(
-                    "/api/auth/signup",
-                            "/api/auth/login",
-                            "/actuator/health")
-                    .permitAll()
-                    .anyRequest().authenticated())
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(j -> {}));
+                .authenticationProvider(authenticationProvider)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
+                .authorizeHttpRequests(auth -> auth.requestMatchers(
+                        "/api/auth/signup", "/api/auth/login", "/actuator/health")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(j -> {}));
 
         return http.build();
     }
