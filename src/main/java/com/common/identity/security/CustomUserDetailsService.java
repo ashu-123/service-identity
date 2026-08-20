@@ -1,5 +1,6 @@
 package com.common.identity.security;
 
+import com.common.identity.exception.UserNotFoundException;
 import com.common.identity.user.model.entity.User;
 import com.common.identity.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userRepository.findByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
         return UserPrincipal.from(user);
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User does not exist"));
     }
 }

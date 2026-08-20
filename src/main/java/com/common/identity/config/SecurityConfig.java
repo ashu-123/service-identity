@@ -17,8 +17,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.List;
+
 @Configuration
-@EnableConfigurationProperties(JwtProperties.class)
+@EnableConfigurationProperties({JwtProperties.class, RefreshTokenProperties.class})
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -54,7 +56,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth.requestMatchers(
-                        "/api/auth/signup", "/api/auth/login", "/actuator/health")
+                        "/api/auth/signup", "/api/auth/login", "/api/auth/refresh", "/api/auth/logout","/actuator/health")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -62,4 +64,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
