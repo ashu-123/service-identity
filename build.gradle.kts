@@ -25,7 +25,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	implementation("org.flywaydb:flyway-database-postgresql")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("com.nimbusds:nimbus-jose-jwt:10.9.1")
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
@@ -43,4 +45,8 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+
+	// Forces Gradle's test JVM to use the canonical IANA timezone name
+	systemProperty("user.timezone", "Asia/Kolkata")
 }
+
