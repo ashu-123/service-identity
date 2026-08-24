@@ -1,4 +1,4 @@
-package com.common.identity.security;
+package com.common.identity.refresh.utils;
 
 import org.springframework.stereotype.Component;
 

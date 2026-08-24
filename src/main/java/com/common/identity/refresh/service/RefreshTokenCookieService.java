@@ -1,6 +1,6 @@
-package com.common.identity.auth.service;
+package com.common.identity.refresh.service;
 
-import com.common.identity.config.RefreshTokenProperties;
+import com.common.identity.refresh.config.RefreshTokenProperties;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseCookie;
