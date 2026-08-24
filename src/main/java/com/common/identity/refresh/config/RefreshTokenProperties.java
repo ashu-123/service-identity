@@ -1,4 +1,4 @@
-package com.common.identity.config;
+package com.common.identity.refresh.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,13 +1,14 @@
-package com.common.identity.auth.service;
+package com.common.identity.refresh.service;
 
-import com.common.identity.auth.model.entity.RefreshToken;
-import com.common.identity.auth.repository.RefreshTokenRepository;
-import com.common.identity.config.RefreshTokenProperties;
-import com.common.identity.security.RefreshTokenGenerator;
+import com.common.identity.refresh.model.entity.RefreshToken;
+import com.common.identity.refresh.repository.RefreshTokenRepository;
+import com.common.identity.refresh.config.RefreshTokenProperties;
+import com.common.identity.refresh.utils.RefreshTokenGenerator;
 import com.common.identity.security.TokenHashingService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -66,7 +67,7 @@ public class RefreshTokenService {
         return new RefreshTokenCreationResult(rawToken, replacement);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void revokeFamily(UUID familyId) {
 
         List<RefreshToken> tokens = refreshTokenRepository.findAllByFamilyId(familyId);

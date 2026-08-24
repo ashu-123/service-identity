@@ -1,8 +1,7 @@
-package com.common.identity.auth.service;
+package com.common.identity.refresh.service;
 
 import com.common.identity.auth.model.dto.AuthResponseDto;
-import com.common.identity.auth.model.entity.RefreshToken;
-import com.common.identity.auth.repository.RefreshTokenRepository;
+import com.common.identity.refresh.repository.RefreshTokenRepository;
 import com.common.identity.exception.InvalidRefreshTokenException;
 import com.common.identity.exception.RefreshTokenReplayException;
 import com.common.identity.jwt.JwtService;

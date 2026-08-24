@@ -1,4 +1,4 @@
-package com.common.identity.auth.model.entity;
+package com.common.identity.refresh.model.entity;
 
 import jakarta.persistence.*;
 

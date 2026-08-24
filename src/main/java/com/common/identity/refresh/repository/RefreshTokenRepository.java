@@ -1,8 +1,11 @@
-package com.common.identity.auth.repository;
+package com.common.identity.refresh.repository;
 
-import com.common.identity.auth.model.entity.RefreshToken;
+import com.common.identity.refresh.model.entity.RefreshToken;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +15,12 @@ import java.util.UUID;
 @Repository
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("""
+       SELECT r
+       FROM RefreshToken r
+       WHERE r.tokenHash = :tokenHash
+       """)
     Optional<RefreshToken> findByTokenHash(String tokenHash);
 
     List<RefreshToken> findAllByFamilyId(UUID familyId);
