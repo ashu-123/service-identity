@@ -19,8 +19,4 @@ public class PathsConfig {
                 "/actuator/health");
     }
 
-    @Bean
-    public List<String> getSecuredPaths() {
-        return List.of();
-    }
 }
