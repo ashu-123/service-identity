@@ -2,8 +2,10 @@ package com.common.identity.auth.controller;
 
 import com.common.identity.auth.model.dto.*;
 import com.common.identity.auth.service.AuthService;
-import com.common.identity.auth.service.RefreshService;
-import com.common.identity.auth.service.RefreshTokenCookieService;
+import com.common.identity.refresh.service.RefreshService;
+import com.common.identity.refresh.service.RefreshTokenCookieService;
+import com.common.identity.oauth.model.dto.OAuthExchangeRequestDto;
+import com.common.identity.oauth.service.OAuthAuthorizationCodeService;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -15,8 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.Duration;
 
 /**
  * The resource Controller class that accepts and processes API requests.
@@ -31,6 +31,8 @@ public class AuthController {
     private final RefreshTokenCookieService refreshTokenCookieService;
 
     private final RefreshService refreshService;
+
+    private final OAuthAuthorizationCodeService oAuthAuthorizationCodeService;
 
     @PostMapping(value = "/signup", headers = "Api-Version=1")
     public ResponseEntity<SignUpResponseDto> signup(@Valid @RequestBody SignUpRequestDto request) {
@@ -77,5 +79,18 @@ public class AuthController {
                 .noContent()
                 .header(HttpHeaders.SET_COOKIE, clearCookie.toString())
                 .build();
+    }
+
+    @PostMapping("/oauth/exchange")
+    public ResponseEntity<AuthResponseDto> exchangeOAuthCode(@Valid @RequestBody OAuthExchangeRequestDto request) {
+
+        var exchangeCode = oAuthAuthorizationCodeService.consume(request.code());
+        var response = AuthResponseDto.builder()
+                .accessToken(exchangeCode.accessToken())
+                .tokenType("Bearer")
+                .expiresIn(exchangeCode.expiresIn())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "password_hash", nullable = false)
+    @Column(name = "password_hash") // removed Non-Null constraint to support user creation during OAuth Login
     private String passwordHash;
 
     @Column(name = "first_name", nullable = false, length = 100)

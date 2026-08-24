@@ -2,10 +2,11 @@ package com.common.identity.auth.service;
 
 
 import com.common.identity.auth.model.dto.*;
-import com.common.identity.auth.repository.RefreshTokenRepository;
+import com.common.identity.refresh.repository.RefreshTokenRepository;
 import com.common.identity.exception.UserAlreadyExistException;
 import com.common.identity.exception.UserNotFoundException;
 import com.common.identity.jwt.JwtService;
+import com.common.identity.refresh.service.RefreshTokenService;
 import com.common.identity.role.model.entity.Role;
 import com.common.identity.role.repository.RoleRepository;
 import com.common.identity.security.TokenHashingService;
