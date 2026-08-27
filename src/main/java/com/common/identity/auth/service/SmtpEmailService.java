@@ -1,0 +1,40 @@
+package com.common.identity.auth.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class SmtpEmailService implements EmailService {
+
+    private final JavaMailSender mailSender;
+
+    @Value("${app.email.from}")
+    private String from;
+
+    @Value("${app.frontend.url}")
+    private String frontendUrl;
+
+    @Override
+    public void sendVerificationEmail(String recipient, String verificationUrl) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(recipient);
+        message.setSubject("Verify your email");
+        message.setText(
+                """
+                Welcome!
+                Please verify your email by clicking the link below:
+                %s
+                This link expires in 5 minutes.
+                If you did not create this account, you can safely ignore this email.
+                """.formatted(verificationUrl)
+        );
+
+        mailSender.send(message);
+    }
+}
