@@ -49,3 +49,19 @@ CREATE TABLE user_roles (
 
 INSERT INTO roles (name, description)
 VALUES ('USER', 'Standard application user');
+
+CREATE TABLE email_verifications (
+    id UUID PRIMARY KEY,
+    email VARCHAR(320) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    token_hash VARCHAR(64) NOT NULL UNIQUE,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL
+);
+
+CREATE INDEX idx_email_verifications_email
+    ON email_verifications(email);
+
+CREATE INDEX idx_email_verifications_expires_at
+    ON email_verifications(expires_at);

@@ -2,6 +2,7 @@ package com.common.identity.auth.controller;
 
 import com.common.identity.auth.model.dto.*;
 import com.common.identity.auth.service.AuthService;
+import com.common.identity.auth.service.EmailVerificationService;
 import com.common.identity.refresh.service.RefreshService;
 import com.common.identity.refresh.service.RefreshTokenCookieService;
 import com.common.identity.oauth.model.dto.OAuthExchangeRequestDto;
@@ -34,10 +35,14 @@ public class AuthController {
 
     private final OAuthAuthorizationCodeService oAuthAuthorizationCodeService;
 
+    private final EmailVerificationService emailVerificationService;
+
     @PostMapping(value = "/signup", headers = "Api-Version=1")
-    public ResponseEntity<SignUpResponseDto> signup(@Valid @RequestBody SignUpRequestDto request) {
-        SignUpResponseDto response = authService.signup(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto request) {
+
+        emailVerificationService.initiateRegistration(request);
+//        SignUpResponseDto response = authService.signup(request);
+        return ResponseEntity.status(HttpStatus.OK).body("Email registration started");
     }
 
     @PostMapping(value = "/login", headers = "Api-Version=1")
@@ -92,5 +97,23 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/email-verification/verify")
+    public ResponseEntity<EmailVerificationResponseDto>
+    verifyEmail(
+            @RequestParam String token
+    ) {
+
+        emailVerificationService.verifyEmail(
+                token
+        );
+
+        return ResponseEntity.ok(
+                new EmailVerificationResponseDto(
+                        true,
+                        "Email verified successfully."
+                )
+        );
     }
 }
