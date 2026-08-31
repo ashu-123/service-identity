@@ -37,4 +37,22 @@ public class SmtpEmailService implements EmailService {
 
         mailSender.send(message);
     }
+
+    @Override
+    public void sendPasswordResetEmail(String recipient, String resetUrl) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(recipient);
+        message.setSubject("Reset your password");
+        message.setText("""
+            We received a request to reset your password.
+            Click the link below to choose a new password: %s
+            This link expires in 15 minutes.
+            If you did not request a password reset,
+            you can safely ignore this email.
+            """.formatted(resetUrl));
+
+        mailSender.send(message);
+    }
 }

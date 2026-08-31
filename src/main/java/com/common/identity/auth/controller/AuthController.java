@@ -3,6 +3,7 @@ package com.common.identity.auth.controller;
 import com.common.identity.auth.model.dto.*;
 import com.common.identity.auth.service.AuthService;
 import com.common.identity.auth.service.EmailVerificationService;
+import com.common.identity.auth.service.PasswordResetService;
 import com.common.identity.refresh.service.RefreshService;
 import com.common.identity.refresh.service.RefreshTokenCookieService;
 import com.common.identity.oauth.model.dto.OAuthExchangeRequestDto;
@@ -36,6 +37,8 @@ public class AuthController {
     private final OAuthAuthorizationCodeService oAuthAuthorizationCodeService;
 
     private final EmailVerificationService emailVerificationService;
+
+    private final PasswordResetService passwordResetService;
 
     @PostMapping(value = "/signup", headers = "Api-Version=1")
     public ResponseEntity<String> signup(@Valid @RequestBody SignUpRequestDto request) {
@@ -115,5 +118,21 @@ public class AuthController {
                         "Email verified successfully."
                 )
         );
+    }
+
+    @PostMapping(value = "/password-reset/request")
+    public ResponseEntity<PasswordResetResponseDto> requestPasswordReset(@Valid @RequestBody PasswordResetRequestDto request) {
+
+        passwordResetService.requestPasswordReset(request.email());
+        return ResponseEntity.ok(new PasswordResetResponseDto("""
+                If an account exists for this email,
+                a password reset link has been sent."""));
+    }
+
+    @PostMapping(value = "/password-reset/confirm")
+    public ResponseEntity<PasswordResetConfirmationResponseDto> confirmPasswordReset(@Valid @RequestBody PasswordResetConfirmRequestDto request) {
+
+        passwordResetService.resetPassword(request);
+        return ResponseEntity.ok(new PasswordResetConfirmationResponseDto("Password reset successfully."));
     }
 }

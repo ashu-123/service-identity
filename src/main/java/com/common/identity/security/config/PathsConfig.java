@@ -17,6 +17,8 @@ public class PathsConfig {
                 "/api/auth/login",
                 "/api/auth/refresh",
                 "/api/auth/email-verification/verify",
+                "/api/auth/password-reset/request",
+                "/api/auth/password-reset/confirm",
                 "/api/auth/logout",
                 "/actuator/health");
     }
