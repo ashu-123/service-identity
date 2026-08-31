@@ -104,6 +104,7 @@ public class EmailVerificationService {
         user.setLastName(verification.getName());
         user.setEnabled(true);
         user.setAccountNonExpired(true);
+        user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setCreatedAt(OffsetDateTime.now());
         user.setUpdatedAt(OffsetDateTime.now());

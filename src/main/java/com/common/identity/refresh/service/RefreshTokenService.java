@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -20,14 +21,11 @@ import java.util.UUID;
 public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-
     private final RefreshTokenGenerator refreshTokenGenerator;
-
     private final TokenHashingService tokenHashingService;
-
     private final RefreshTokenProperties properties;
-
     private final RefreshTokenGenerator tokenGenerator;
+    private final Clock clock;
 
     @Transactional
     public RefreshTokenCreationResult create(Long userId) {
@@ -77,6 +75,11 @@ public class RefreshTokenService {
             if (!token.isRevoked()) { token.setRevokedAt(now); }
         }
         refreshTokenRepository.saveAll(tokens);
+    }
+
+    @Transactional
+    public void revokeAllForUser(Long userId) {
+        refreshTokenRepository.revokeAllByUserId(userId, Instant.now(clock));
     }
 
 

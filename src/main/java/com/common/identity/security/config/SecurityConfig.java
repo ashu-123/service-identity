@@ -1,5 +1,6 @@
 package com.common.identity.security.config;
 
+import com.common.identity.auth.config.PasswordResetProperties;
 import com.common.identity.refresh.config.RefreshTokenProperties;
 import com.common.identity.exception.security.JwtAccessDeniedHandler;
 import com.common.identity.exception.security.JwtAuthenticationEntryPoint;
@@ -29,7 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableConfigurationProperties({JwtProperties.class, RefreshTokenProperties.class, OAuth2Properties.class, PathsConfig.class})
+@EnableConfigurationProperties(
+        {JwtProperties.class, RefreshTokenProperties.class, OAuth2Properties.class, PathsConfig.class, PasswordResetProperties.class})
 //@RequiredArgsConstructor
 public class SecurityConfig {
 
